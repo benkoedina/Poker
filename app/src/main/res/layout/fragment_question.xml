@@ -11,9 +11,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/Question_textview"
+            android:layout_width="328dp"
+            android:layout_height="66dp"
+            android:fontFamily="cursive"
+            android:layout_marginTop="44dp"
+            android:text="Question"
+            android:textSize="24dp"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:id="@+id/rvNumbers"
+            android:layout_width="344dp"
+            android:layout_height="324dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="30dp"
+           />
 
         <Button
             android:id="@+id/submit"
@@ -23,5 +39,6 @@
             android:text="Submit Answers"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20dp"></Button>
+
     </LinearLayout>
 </FrameLayout>

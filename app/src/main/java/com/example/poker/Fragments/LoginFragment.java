@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.poker.Model.Group;
 import com.example.poker.Model.Question;
 import com.example.poker.Model.User;
 import com.example.poker.R;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +21,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -37,54 +42,33 @@ public class LoginFragment extends Fragment {
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //setting te layout
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        EditText et_name = view.findViewById(R.id.et_name);
-        EditText et_groupid=view.findViewById(R.id.et_groupid);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        final  EditText et_name = view.findViewById(R.id.et_name);
+        final EditText et_groupid=view.findViewById(R.id.et_groupid);
         Button bt_login = view.findViewById(R.id.bt_login);
 
-     insertData();
+        firebaseDatabase = firebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Group value = dataSnapshot.getValue(Group.class);
-                Log.d("Value", "Value is: " + value);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("E", "Failed to read value.", error.toException());
-            }
-        });
+        insertData();
+
         bt_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                insertData();
-                databaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // This method is called once with the initial value and again
-                        // whenever data at this location is updated.
-                        Group value = dataSnapshot.getValue(Group.class);
-                        Log.d("Value", "Value is: " + value.toString());
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-                        Log.w("E", "Failed to read value.", error.toException());
-                    }
-                });
+                if (et_name.getText().toString().isEmpty() || (et_groupid.toString().isEmpty())) {
 
-                FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.container, new QuestionFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                    Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    final String groupId = et_groupid.getText().toString();
+                    final String name = et_name.getText().toString();
+                    checkGroupStatus(groupId,name);
+
+                }
+
             }
         });
 
@@ -93,31 +77,66 @@ public class LoginFragment extends Fragment {
     }
     public void insertData(){
 
-        ArrayList<Integer> ids = new ArrayList<>();
-        ids.add(1);
-        User user1 = new User(1,"Edina",0,ids);
-        User user2 = new User(2,"Eva",0,ids);
-        User user = new User(3,"Bibi",0);
-        ArrayList<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-        Question q1 = new Question(1,"Do you like Android Studio?",true,users);
-        Question q2 = new Question(2,"Do you like Programming?",true,users);
-        ArrayList<Question> questions = new ArrayList<>();
-        questions.add(q1);
-        questions.add(q2);
-        Group g1 = new Group(1,questions,true);
+        ArrayList <User> users = new ArrayList<>();
 
-        firebaseDatabase = firebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("GROUP_DATABASE");
-        //  databaseReference.push().setValue(user1);
-        //databaseReference.push().setValue(user2);
-        //databaseReference.push().setValue(q1);
-        //databaseReference.push().setValue(q2);
-        databaseReference.push().setValue(g1);
+        Question question1 = new Question(0,"Rate this app!", "active", users );
+        Question question2 = new Question(1,"Do you like Java?", "active", users );
+        Question question3 = new Question(2,"Answer this question?", "inactive", users );
+        Question question4 = new Question(3,"Next question?", "active", users );
+
+        ArrayList <Question> questions = new ArrayList<>();
+        questions.add(question1);
+        questions.add(question2);
+        questions.add(question3);
+        questions.add(question4);
 
 
+        Group group1 = new Group("1", true, questions);
+        Group group2 = new Group("2", false, questions);
+        Group group3 = new Group("3", false, questions);
+        Group group4 = new Group("4", true, questions);
+        Group group5 = new Group("5", true, questions);
 
+        databaseReference.child(group1.getId()).setValue(group1);
+        databaseReference.child(group2.getId()).setValue(group2);
+        databaseReference.child(group3.getId()).setValue(group3);
+        databaseReference.child(group4.getId()).setValue(group4);
+        databaseReference.child(group5.getId()).setValue(group5);
+
+
+    }
+
+
+    public void checkGroupStatus (final String groupid, final String name)
+    {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Group g = dataSnapshot.child(groupid).getValue(Group.class);
+                if (g.isStatus()==true) {
+                    final Bundle bundle = new Bundle();
+                    bundle.putString("name", name);
+                    bundle.putString("groupid", groupid);
+
+                    QuestionFragment Qfragment = new QuestionFragment();
+                    Qfragment.setArguments(bundle);
+                    FragmentTransaction fr = getFragmentManager().beginTransaction();
+                    fr.replace(R.id.container, Qfragment);
+                    fr.addToBackStack(null);
+                    fr.commit();
+                }
+                else {
+                    Toast.makeText(getContext(), "Group is not active!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 }

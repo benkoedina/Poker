@@ -4,44 +4,47 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Question {
-    private int question_id;
-    private String question;
-    private boolean question_status;
-    private LocalDateTime question_time;
-    private ArrayList<User> user;
 
-    public Question(int question_id, String question, boolean question_status, ArrayList<User> user) {
-        this.question_id = question_id;
+
+    private int id;
+    private String question;
+    private String status;
+    private LocalDateTime time;
+    private ArrayList<User> users;
+
+    public Question(int id, String question, String status, LocalDateTime time, ArrayList<User> users) {
+        this.id = id;
         this.question = question;
-        this.question_status = question_status;
-        this.user = user;
+        this.status = status;
+        this.time = time;
+        this.users = users;
+    }
+    public Question(){}
+
+    public Question(int id, String question, String status, ArrayList<User> users) {
+        this.id = id;
+        this.question = question;
+        this.status = status;
+        this.users = users;
     }
 
     @Override
     public String toString() {
         return "Question{" +
-                "question_id=" + question_id +
+                "id=" + id +
                 ", question='" + question + '\'' +
-                ", question_status=" + question_status +
-                ", question_time=" + question_time +
-                ", user=" + user +
+                ", status=" + status +
+                ", time=" + time +
+                ", users=" + users +
                 '}';
     }
 
-    public Question(int question_id, String question, boolean question_status, LocalDateTime question_time, ArrayList<User> user) {
-        this.question_id = question_id;
-        this.question = question;
-        this.question_status = question_status;
-        this.question_time = question_time;
-        this.user = user;
+    public int getId() {
+        return id;
     }
 
-    public int getQuestion_id() {
-        return question_id;
-    }
-
-    public void setQuestion_id(int question_id) {
-        this.question_id = question_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getQuestion() {
@@ -52,27 +55,27 @@ public class Question {
         this.question = question;
     }
 
-    public boolean isQuestion_status() {
-        return question_status;
+    public String isStatus() {
+        return status;
     }
 
-    public void setQuestion_status(boolean question_status) {
-        this.question_status = question_status;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public LocalDateTime getQuestion_time() {
-        return question_time;
+    public LocalDateTime getTime() {
+        return time;
     }
 
-    public void setQuestion_time(LocalDateTime question_time) {
-        this.question_time = question_time;
+    public void setTime(LocalDateTime time) {
+        this.time = time;
     }
 
-    public ArrayList<User> getUser() {
-        return user;
+    public ArrayList<User> getUsers() {
+        return users;
     }
 
-    public void setUser(ArrayList<User> user) {
-        this.user = user;
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
     }
 }

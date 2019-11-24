@@ -23,13 +23,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //firebaseDatabase = FirebaseDatabase.getInstance();
-      //  databaseReference = firebaseDatabase.getReference("user");
-       // User user = new User(1,"Edina",  0);
-      //  User user1 = new User(2,"Matyi",1);
-     //   databaseReference.setValue(user1);
-
-
 
         if (savedInstanceState == null)
         {
