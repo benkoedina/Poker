@@ -69,7 +69,7 @@ public class QuestionFragment extends Fragment {
             public void onClick(View view) {
 
                 FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.container, new AnswerGroup());
+                fragmentTransaction.replace(R.id.container, new QuestionListFragment());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
