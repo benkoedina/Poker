@@ -50,8 +50,6 @@ public class QuestionFragment extends Fragment {
         //setting te layout
         View view = inflater.inflate(R.layout.fragment_question, container, false);
 
-        Button bt_submit = view.findViewById(R.id.submit);
-
 
         final String[] data = {"0", "3", "6", "9", "12", "15", "18", "21", "24","27","30","33"};
 
@@ -75,16 +73,7 @@ public class QuestionFragment extends Fragment {
         Button submit_button = view.findViewById(R.id.submit);
 
 
-        bt_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.container, new QuestionListFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        });
+        setQuestion(submit_button,question_tv,groupid, name);
 
         return view;
 

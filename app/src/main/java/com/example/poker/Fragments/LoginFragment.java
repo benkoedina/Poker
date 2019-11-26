@@ -96,12 +96,14 @@ public class LoginFragment extends Fragment {
         Group group3 = new Group("3", false, questions);
         Group group4 = new Group("4", true, questions);
         Group group5 = new Group("5", true, questions);
+        Group group6 = new Group("6", true, questions);
 
         databaseReference.child(group1.getId()).setValue(group1);
         databaseReference.child(group2.getId()).setValue(group2);
         databaseReference.child(group3.getId()).setValue(group3);
         databaseReference.child(group4.getId()).setValue(group4);
         databaseReference.child(group5.getId()).setValue(group5);
+        databaseReference.child(group6.getId()).setValue(group6);
 
 
     }
@@ -114,6 +116,7 @@ public class LoginFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 Group g = dataSnapshot.child(groupid).getValue(Group.class);
+                Log.d("Proba",g.isStatus()+"");
                 if (g.isStatus()==true) {
                     final Bundle bundle = new Bundle();
                     bundle.putString("name", name);
