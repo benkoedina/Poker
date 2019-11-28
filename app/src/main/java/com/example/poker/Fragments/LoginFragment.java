@@ -51,13 +51,14 @@ public class LoginFragment extends Fragment {
         firebaseDatabase = firebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
 
-
+        //kezdetleges adatok hozzaadasa az adabazishoz
         insertData();
 
         bt_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                //login ellenorzes
                 if (et_name.getText().toString().isEmpty() || (et_groupid.toString().isEmpty())) {
 
                     Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
@@ -65,6 +66,8 @@ public class LoginFragment extends Fragment {
 
                     final String groupId = et_groupid.getText().toString();
                     final String name = et_name.getText().toString();
+
+                    //megnezi hogy aktiv-e vagy nem aktiv a group ahova csatlakozni szeretne a user
                     checkGroupStatus(groupId,name);
 
                 }
@@ -109,6 +112,7 @@ public class LoginFragment extends Fragment {
     }
 
 
+
     public void checkGroupStatus (final String groupid, final String name)
     {
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -118,10 +122,12 @@ public class LoginFragment extends Fragment {
                 Group g = dataSnapshot.child(groupid).getValue(Group.class);
                 Log.d("Proba",g.isStatus()+"");
                 if (g.isStatus()==true) {
+                    //ha aktiv akktor tovabb adja az ertekeket a nevet es a group-t a kovetkezo fragmentnek
                     final Bundle bundle = new Bundle();
                     bundle.putString("name", name);
                     bundle.putString("groupid", groupid);
 
+                    //fragment valtas
                     QuestionFragment Qfragment = new QuestionFragment();
                     Qfragment.setArguments(bundle);
                     FragmentTransaction fr = getFragmentManager().beginTransaction();
@@ -130,6 +136,7 @@ public class LoginFragment extends Fragment {
                     fr.commit();
                 }
                 else {
+                    //ha nem aktiv
                     Toast.makeText(getContext(), "Group is not active!", Toast.LENGTH_SHORT).show();
                 }
             }

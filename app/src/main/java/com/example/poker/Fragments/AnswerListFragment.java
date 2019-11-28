@@ -21,6 +21,8 @@ public class AnswerListFragment extends Fragment {
 
     public AnswerListFragment(){};
 
+    //AnswerListFragment => kilistazza az osszes usert es a valaszaikat az adott kerdesre
+
     public void Oncreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
     }
@@ -37,8 +39,9 @@ public class AnswerListFragment extends Fragment {
         ArrayList<String> userAnswers = bundle.getStringArrayList("answers");
 
 
+        //RecyclerView es adapter megvalositas
         recyclerView = (RecyclerView)view.findViewById(R.id.answerrecyclerView);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL)); //elem elvalaszto
         adapter = new AnswerListAdapter(userAnswers,getContext());
 
         recyclerView.setHasFixedSize(true);
