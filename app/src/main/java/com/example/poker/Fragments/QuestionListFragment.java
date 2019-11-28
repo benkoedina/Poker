@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class QuestionListFragment extends Fragment {
+
     QuestionListAdapter adapter;
     RecyclerView recyclerView;
     public onClickInterface onclickInterface;
@@ -40,7 +41,8 @@ public class QuestionListFragment extends Fragment {
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
+        firebaseDatabase = firebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
         final View view = inflater.inflate(R.layout.fragment_question_list, container, false);
         Bundle bundle = this.getArguments();
         final  String groupid = bundle.getString("groupid");
@@ -51,15 +53,21 @@ public class QuestionListFragment extends Fragment {
                 Group g = dataSnapshot.child(groupid).getValue(Group.class);
                 final ArrayList<Question> q1 = g.getQuestions();
 
+
+
                 onclickInterface = new onClickInterface() {
                     @Override
                     public void setClick(int pos) {
 
-                        AnswerUser Afragment = new AnswerUser();
+                        AnswerListFragment Afragment = new AnswerListFragment();
 
                         final Bundle bundle = new Bundle();
-                        ArrayList <User> users = q1.get(pos).getUsers();
+
+                        if (q1.get(pos).getUsers()!=null){
+                            ArrayList <User> users = q1.get(pos).getUsers();
                         ArrayList <String> userAnswers = new ArrayList<>();
+
+
 
                         for (User u : users)
                         {
@@ -69,14 +77,23 @@ public class QuestionListFragment extends Fragment {
                         bundle.putStringArrayList("answers", userAnswers);
 
 
-                        Afragment.setArguments(bundle);
-
-                        FragmentTransaction fr = getFragmentManager().beginTransaction();
-                        fr.replace(R.id.container, Afragment);
-                        fr.addToBackStack(null);
-                        fr.commit();
 
                     }
+                        else {
+                            ArrayList<String> userAnswers = new ArrayList<>();
+                            bundle.putStringArrayList("answers", userAnswers);
+
+                        }
+                            Afragment.setArguments(bundle);
+
+
+                            FragmentTransaction fr = getFragmentManager().beginTransaction();
+                            fr.replace(R.id.container, Afragment);
+                            fr.addToBackStack(null);
+                            fr.commit();
+
+
+                        }
                 };
 
                 recyclerView = (RecyclerView)view.findViewById(R.id.questionrecyclerView);
